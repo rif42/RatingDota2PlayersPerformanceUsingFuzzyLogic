@@ -1,0 +1,32 @@
+---
+title: "Skripsi"
+format:
+  html:
+    toc: true
+    html-math-method: katex
+    toc-title: Daftar Isi
+    toc-depth: 3
+    number-sections: true
+  # docx:
+  #   toc: true
+  #   toc-title: Daftar Isi
+  #   toc-depth: 3
+  #   number-sections: true
+  #   highlight-style: github
+  #   reference-doc: md_reference.docx
+---
+
+# TEST for heading 1
+
+adwdawdawd
+
+
+## heading 2 LOOKS LIKE THIS {.unnumbered}
+
+awdawdawd
+
+
+
+### HOW about heading 3
+
+awdawdawd
