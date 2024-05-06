@@ -921,8 +921,10 @@ def display_hero_positions(selectedMatch):
     st.write('## Pilih Posisi Hero')
     poscol1=['pos1-carry', 'pos2-midlaner', 'pos3-offlane', 'pos4-roamer', 'pos5-support']
     pos_selection = []
-
+    st.write('Masing-masing team harus mempunyai posisi 1-5')
     col1, col2 = st.columns(2)
+    col1.write('### Radiant')
+    col2.write('### Dire')
     for i in range(10):
         if i < 5:
             pos_selection.append(col1.selectbox(selectedMatch.iloc[i,0], poscol1, key=f'selection_{i}'))
@@ -1047,6 +1049,17 @@ def strip_to_pos(finaltable, pos_selection):
     
     return finaltable
 
+def convert_to_categorical(dataframe):
+  for cols in dataframe.columns:
+    if cols == 'score':
+      min = dataframe[cols].min()
+      q1 = dataframe[cols].quantile(0.25)
+      q3 = dataframe[cols].quantile(0.75)
+      max = dataframe[cols].max()
+      print(min,q1,q3,max)
+      dataframe[cols] = pd.cut(dataframe[cols], bins=[min-1, q1, q3, max+1], labels=['jelek', 'sedang', 'bagus'])
+  return dataframe
+
 st.write('# Dota 2 Player Performance Prediction')
 st.write('Program ini berfungsi untuk memprediksi performa seorang pemain Dota 2 berdasarkan hero yang dipilihnya dan posisi yang dimainkan')
 st.write('Sistem prediksi ini menggunakan dataset yang diambil dari pertandingan semi-professional dan professional Dota2 yang terjadi di patch 7.33')
@@ -1079,6 +1092,8 @@ if chosen:
             finalfinal = final_calculation(fuzzified_match, pos_inference['pos1_inference'], pos_inference['pos2_inference'], pos_inference['pos3_inference'], pos_inference['pos4_inference'], pos_inference['pos5_inference'])
                         
             finalscore = strip_to_pos(finalfinal, pos_selection)
+            
+            finalscore = convert_to_categorical(finalscore)
             
             st.write(finalscore)
     else:
