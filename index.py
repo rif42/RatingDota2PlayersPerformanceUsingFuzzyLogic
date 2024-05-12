@@ -919,20 +919,47 @@ def display_match_details(selectedMatch, fuzzified_match):
 
 def display_hero_positions(selectedMatch):
     st.write('## Pilih Posisi Hero')
-    poscol1=['pos1-carry', 'pos2-midlaner', 'pos3-offlane', 'pos4-roamer', 'pos5-support']
-    pos_selection = []
+
+    pos_ref=['pos1-carry', 'pos2-midlaner', 'pos3-offlane', 'pos4-roamer', 'pos5-support']
+    
     st.write('Masing-masing team harus mempunyai posisi 1-5')
+
     col1, col2 = st.columns(2)
-    col1.write('### Radiant')
-    col2.write('### Dire')
-    for i in range(10):
-        if i < 5:
-            pos_selection.append(col1.selectbox(selectedMatch.iloc[i,0], poscol1, key=f'selection_{i}'))
+
+    with col1:
+        st.write('### Radiant')
+        pos1r = st.selectbox(selectedMatch.iloc[0,0], pos_ref, index=0)
+        pos2r = st.selectbox(selectedMatch.iloc[1,0], pos_ref, index=1)
+        pos3r = st.selectbox(selectedMatch.iloc[2,0], pos_ref, index=2)
+        pos4r = st.selectbox(selectedMatch.iloc[3,0], pos_ref, index=3)
+        pos5r = st.selectbox(selectedMatch.iloc[4,0], pos_ref, index=4)
+        pos_radiant = [pos1r, pos2r, pos3r, pos4r, pos5r]
+        if len(set(pos_radiant)) == len(pos_radiant):
+            radiant=True
+            st.markdown(''':green[VALID]''')
         else:
-            pos_selection.append(col2.selectbox(selectedMatch.iloc[i,0], poscol1, key=f'selection_{i+5}'))
-           
-    if pos_selection:
-        return pos_selection
+            radiant=False
+            st.markdown(''':red[INVALID, pilih satu posisi di setiap hero]''')
+
+    with col2:
+        st.write('### Dire')
+        pos1d=st.selectbox(selectedMatch.iloc[5,0], pos_ref, index=0)
+        pos2d=st.selectbox(selectedMatch.iloc[6,0], pos_ref, index=1)
+        pos3d=st.selectbox(selectedMatch.iloc[7,0], pos_ref, index=2)
+        pos4d=st.selectbox(selectedMatch.iloc[8,0], pos_ref, index=3)
+        pos5d=st.selectbox(selectedMatch.iloc[9,0], pos_ref, index=4)
+        pos_dire = [pos1d, pos2d, pos3d, pos4d, pos5d]
+        if len(set(pos_dire)) == len(pos_dire):
+            dire=True
+            st.markdown(''':green[VALID]''')
+        else:
+            dire=False
+            st.markdown(''':red[INVALID, pilih satu posisi di setiap hero]''')
+    
+    if radiant and dire:
+        return pos_radiant + pos_dire
+    else:
+        return False
     
 def position_checking(pos_selection):
     poscol1=['pos1-carry', 'pos2-midlaner', 'pos3-offlane', 'pos4-roamer', 'pos5-support']
@@ -1085,19 +1112,10 @@ if chosen:
     pos_inference = get_inference_data(inference_rules)
     display_match_details(selectedMatch, fuzzified_match)
     pos_selection = display_hero_positions(selectedMatch)
-    if position_checking(pos_selection):
-        st.write('### Posisi Hero Valid')
+    if (pos_selection != False):
         predict = st.button('Prediksi Performa')
         if predict:
             finalfinal = final_calculation(fuzzified_match, pos_inference['pos1_inference'], pos_inference['pos2_inference'], pos_inference['pos3_inference'], pos_inference['pos4_inference'], pos_inference['pos5_inference'])
-                        
             finalscore = strip_to_pos(finalfinal, pos_selection)
-            
             finalscore = convert_to_categorical(finalscore)
-            
-            st.write(finalscore)
-    else:
-        st.write('### Posisi Hero Tidak Valid')
-    
-    
-    
+            st.write(finalscore)        
