@@ -1106,16 +1106,21 @@ st.write('MatchID digunakan untuk mencari detail match yang dimainkan oleh playe
 chosen = st.text_input('MatchID')
 
 if chosen:
-    fuzzified_match = getMatchByID(chosen, fuzzy_limits)
-    selectedMatch = matchDetailAggregator([chosen])
-    inference_rules = getAllRules()
-    pos_inference = get_inference_data(inference_rules)
-    display_match_details(selectedMatch, fuzzified_match)
-    pos_selection = display_hero_positions(selectedMatch)
-    if (pos_selection != False):
-        predict = st.button('Prediksi Performa')
-        if predict:
-            finalfinal = final_calculation(fuzzified_match, pos_inference['pos1_inference'], pos_inference['pos2_inference'], pos_inference['pos3_inference'], pos_inference['pos4_inference'], pos_inference['pos5_inference'])
-            finalscore = strip_to_pos(finalfinal, pos_selection)
-            finalscore = convert_to_categorical(finalscore)
-            st.write(finalscore)        
+    try:
+        fuzzified_match = getMatchByID(chosen, fuzzy_limits)
+        if(fuzzified_match.empty):
+            raise Exception('MatchID tidak ditemukanaaa')
+        selectedMatch = matchDetailAggregator([chosen])
+        inference_rules = getAllRules()
+        pos_inference = get_inference_data(inference_rules)
+        display_match_details(selectedMatch, fuzzified_match)
+        pos_selection = display_hero_positions(selectedMatch)
+        if (pos_selection != False):
+            predict = st.button('Prediksi Performa')
+            if predict:
+                finalfinal = final_calculation(fuzzified_match, pos_inference['pos1_inference'], pos_inference['pos2_inference'], pos_inference['pos3_inference'], pos_inference['pos4_inference'], pos_inference['pos5_inference'])
+                finalscore = strip_to_pos(finalfinal, pos_selection)
+                finalscore = convert_to_categorical(finalscore)
+                st.write(finalscore)        
+    except Exception as e: 
+        st.write(f"Mohon Parse match terlebih dahulu di https://stratz.com/matches/{chosen}")  
