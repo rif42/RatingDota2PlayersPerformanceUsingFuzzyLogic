@@ -1089,7 +1089,7 @@ def convert_to_categorical(dataframe):
       q3 = dataframe[cols].quantile(0.75)
       max = dataframe[cols].max()
       print(min,q1,q3,max)
-      dataframe[cols] = pd.cut(dataframe[cols], bins=[min-1, q1, q3, max+1], labels=['jelek', 'sedang', 'bagus'])
+      dataframe[cols] = pd.cut(dataframe[cols], bins=[min-1, q1-0.001, q3+0.001, max+1], labels=['jelek', 'sedang', 'bagus'])
   return dataframe
 
 st.write('# Dota 2 Player Performance Prediction')
