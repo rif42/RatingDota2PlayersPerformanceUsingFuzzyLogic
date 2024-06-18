@@ -1111,10 +1111,10 @@ st.write('MatchID digunakan untuk mencari detail match yang dimainkan oleh playe
 chosen = st.text_input('MatchID')
 
 if chosen:
-    # try:
+    try:
         fuzzified_match = getMatchByID(chosen, fuzzy_limits)
-        # if(fuzzified_match.empty):
-        #     raise Exception('MatchID tidak ditemukanaaa')
+        if(fuzzified_match.empty):
+            raise Exception('MatchID tidak ditemukan')
         selectedMatch = matchDetailAggregator([chosen])
         inference_rules = getAllRules()
         pos_inference = get_inference_data(inference_rules)
@@ -1127,5 +1127,5 @@ if chosen:
                 finalscore = strip_to_pos(finalfinal, pos_selection)
                 finalscore = convert_to_categorical(finalscore)
                 st.write(finalscore)        
-    # except Exception as e: 
-    #     st.write(f"Mohon Parse match terlebih dahulu di https://stratz.com/matches/{chosen}")  
+    except Exception as e: 
+        st.write(f"{e}, Mohon Parse match terlebih dahulu di https://stratz.com/matches/{chosen}")  
