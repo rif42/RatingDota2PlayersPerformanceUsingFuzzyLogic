@@ -682,16 +682,16 @@ def fuzzify (bot,mid,top,x):
         return [0,1,0]
 
     if x > mid :
-        mu_mid = (top - x) / (top - mid)
-        mu_top = (x - mid) / (top - mid)
+        mu_mid = int((top - x) / (top - mid))
+        mu_top = int((x - mid) / (top - mid))
         if round(mu_mid,2) + round(mu_top,2) == 1:
             return [0, round(mu_mid,2), round(mu_top,2)]
         else:
             return "calculation error"
     
     if x < mid :
-        mu_bot = (mid - x) / (mid - bot)
-        mu_mid = (x - bot) / (mid - bot)
+        mu_bot = int((mid - x) / (mid - bot))
+        mu_mid = int((x - bot) / (mid - bot))
         if round(mu_bot,2) + round(mu_mid,2) == 1:
             return [round(mu_bot,2), round(mu_mid,2), 0]
         else:
